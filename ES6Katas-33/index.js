@@ -1,33 +1,47 @@
-// 31: array - `Array.prototype.fill` method
+
+'use strict';
+
+// 33: array - `Array.prototype.findIndex`
 // To do: make all tests pass, leave the assert lines unchanged!
 
-describe('`Array.prototype.fill` can fill up an array with one value', () => {
+describe('`Array.prototype.findIndex` makes finding items in arrays easier', () => {
 
-  it('`fill(0)` will populate `0` into each array element', function() {
-    const arr = new Array(3).fill(0);
+  it('takes a compare function, returns the index where it returned true', function() {
+    const foundAt = [false, true].findIndex(item);
 
-    assert.deepEqual(arr, [0, 0, 0]);
+    assert.equal(foundAt, 1);
   });
 
-  it('fill only changes content, adds no new elements', function() {
-    const arr = [].fill(0);
+  it('returns the first position it was found at', function() {
+    const foundAt = [0, 1, 1, 1].findIndex(item => item = 1);
 
-    assert.deepEqual(arr, []);
+    assert.equal(foundAt, 1);
   });
 
-  it('second parameter to `fill()` is the position where to start filling', function() {
-    const fillPosition = 0;
-    const arr = [1,2,3].fill(42, 2);
+  it('returns `-1` when nothing was found', function() {
+    const foundAt = [1, 2, 3].findIndex(item => item > 1);
 
-    assert.deepEqual(arr, [1, 2, 42]);
+    assert.equal(foundAt, -1);
   });
 
-  it('third parameter is the position where filling stops', function() {
-    const fillStartAt = 1;
-    const fillEndAt = 2;
-    const arr = [1,2,3].fill(42, fillStartAt, fillEndAt);
+  it('the findIndex callback gets the item, index and array as arguments', function() {
+    const three = 3;
+    const containsThree = arr => arr.indexOf(three) > -1;
+    function theSecondThree(index, arr) {
+      const preceedingItems = arr.slice(0, index);
+      return containsThree(preceedingItems);
+    }
+    const foundAt = [1, 1, 2, 3, 3, 3].findIndex(theSecondThree);
 
-    assert.deepEqual(arr, [1, 42, 3]);
+    assert.equal(foundAt, 4);
+  });
+
+  it('combined with destructuring complex compares become short', function() {
+    const bob = {name: 'Bob'};
+    const alice = {name: 'Alice'};
+    const foundAt = [bob, alice].findIndex(({name:{length:l}}) => length > 3);
+
+    assert.equal(foundAt, 1);
   });
 
 });
